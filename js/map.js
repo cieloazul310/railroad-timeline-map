@@ -1021,7 +1021,7 @@
       zIndex: 10,
       text: new ol.style.Text({
         offsetX: 8,
-        font: "11px -apple-system,sans-serif",
+        font: '12px -apple-system,BlinkMacSystemFont,"Helvetica Neue","Original Yu Gothic","Yu Gothic",YuGothic,Verdana,Meiryo,"M+ 1p",sans-serif',
         textAlign: "left",
         textBaseline: "middle",
         text: feature.get("N05_011"),
@@ -1038,7 +1038,7 @@
     if (status && feature.get("N05_006").slice(5, 10) === mapState.getSelectedValue().slice(5)) {
       sty[0].setZIndex(15);
       sty[0].getImage().setRadius(4);
-      sty[1].getText().setFont("13px -apple-system,sans-serif");
+      sty[1].getText().setFont('14px -apple-system,BlinkMacSystemFont,"Helvetica Neue","Original Yu Gothic","Yu Gothic",YuGothic,Verdana,Meiryo,"M+ 1p",sans-serif');
       sty[1].setZIndex(20);
     }
 
