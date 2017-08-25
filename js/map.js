@@ -872,7 +872,7 @@
       <button id="toggle-menu" title="メニューを開く">&equiv;</button>
     </div>
 */
-    const viewport = document.querySelector("#map .ol-viewport");
+    const viewport = document.querySelector("#map .ol-overlaycontainer-stopevent");
 
     const menuContainer = document.createElement("div");
     menuContainer.setAttribute("class", "ol-control toggle-menu");
