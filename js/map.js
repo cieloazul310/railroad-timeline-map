@@ -516,7 +516,7 @@
   const rails = new ol.layer.VectorTile({
     source: new ol.source.VectorTile({
       format: new ol.format.MVT(),
-      url: "./tile/rails/" + "{z}/{x}/{y}.mvt",
+      url: "//cieloazul310.github.io/mvt-tiles/tile/rails/" + "{z}/{x}/{y}.mvt",
       attributions: new ol.Attribution({
         html: attributions.ksj
       })
