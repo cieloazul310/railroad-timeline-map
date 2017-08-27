@@ -954,7 +954,7 @@
       mapState.setMustUpdateInfo(true);
     }
     // remove invisible features
-    if (!mapState.getVisibleInYear(feature)) return /*new ol.style.Style()*/null;
+    if (!mapState.getVisibleInYear(feature)) return null;
     if (mapState.getEqualtoCurrentCue(feature) && mapState.getMustUpdateInfo()) {
       console.log("info updated!");
 
@@ -1016,19 +1016,19 @@
 
     if (resolution > 20 && (!status || (status && feature.get("N05_006").slice(5, 10) !== mapState.getSelectedValue().slice(5)))) return null;
 
-    const sty = [new ol.style.Style()];
-
-    sty[0].setZIndex(0);
-    sty[0].setImage(new ol.style.Circle({
-      radius: 2.5,
-      fill: new ol.style.Fill({
-        color: "white"
-      }),
-      stroke: new ol.style.Stroke({
-        width: 1,
-        color: "black"
+    const sty = [new ol.style.Style({
+      zIndex: 0,
+      image: new ol.style.Circle({
+        radius: 2.5,
+        fill: new ol.style.Fill({
+          color: "white"
+        }),
+        stroke: new ol.style.Stroke({
+          width: 1,
+          color: "black"
+        })
       })
-    }));
+    })];
 
     if (resolution > 4.78 && (!status || (status && feature.get("N05_006").slice(5, 10) !== mapState.getSelectedValue().slice(5)))) return sty;
 
