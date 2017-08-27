@@ -10,11 +10,6 @@
       center: [139.8241, 35.7080],
       rotation: 0
     },
-    layers: {/*
-      base: ["allblacks"],
-      overlays: ["rails"],
-      yokyo: []*/
-    },
     year: {
       current: new Date().getFullYear(),
       years: [],
@@ -23,16 +18,23 @@
     selected: {
       cue: "N05_006"
     },
-    geolocation: true
+    geolocation: true,
+    slider: true
+  };
+
+  const mapOption = {
+    geolocation: true,
+    slider: true
   };
 
   class State {
     constructor(map, defaults) {
       this.map = map;
       this.config = Object.assign({}, defaults);
+      this.config.layers = {};
       this.config.urlstrings = {layers: {}};
 
-      map.getLayers().forEach((lyg, i) => {
+      this.getMap().getLayers().forEach((lyg, i) => {
         this.setLayersConfigFromMap(lyg);
       });
 
@@ -46,9 +48,13 @@
       this.tributeLayersStrings(defaults.layers);
 
       this.config.urlstrings.view = this.viewStrings(this.config.view);
-      this.config.urlstrings.year = this.config.year.current;
+      this.config.urlstrings.year = "year=" + this.config.year.current;
 
       return this;
+    }
+
+    getMap() {
+      return this.map;
     }
 
     setView(config) {
@@ -145,7 +151,7 @@
     setYear(year) {
       this.config.year.current = parseInt(year, 10);
       this.config.year.years.push(year);
-      this.config.urlstrings.year = year;
+      this.config.urlstrings.year = "year=" + year;
       return this;
     }
 
@@ -284,7 +290,7 @@
     }
 
     getGeolocation() {
-      return true;
+      return this.config.geolocation;
     }
 
     // take config
@@ -510,7 +516,7 @@
   const rails = new ol.layer.VectorTile({
     source: new ol.source.VectorTile({
       format: new ol.format.MVT(),
-      url: "//cieloazul310.github.io/mvt-tiles/tile/rails/" + "{z}/{x}/{y}.mvt",
+      url: "./tile/rails/" + "{z}/{x}/{y}.mvt",
       attributions: new ol.Attribution({
         html: attributions.ksj
       })
@@ -598,7 +604,8 @@
       mapState.viewURLtoConfig(parts[0]);
     }
     if (parts.length > 1) {
-      mapState.setYear(parseInt(parts[1], 10));
+      const yr = parts[1].split("=")[1];
+      mapState.setYear(parseInt(yr, 10));
     }
     if (parts.length > 2) {
       mapState.layersURLtoConfig(parts.slice(2));
@@ -615,65 +622,72 @@
 
   // geolocationの設定
 
-  if (mapState.getGeolocation()) {
+  ;
+  ((state) => {
+    if (state.getGeolocation()) {
 
-    const geolocation = new ol.Geolocation({
-      projection: map.getView().getProjection()
-    });
-
-    const positionFeature = new ol.Feature();
-    positionFeature.setStyle([
-      new ol.style.Style({
-        image: new ol.style.Circle({
-          radius: 12,
-          fill: new ol.style.Fill({
-            color: 'rgba(51, 181, 204, 0.4)'
-          })
-        })
-      }),
-      new ol.style.Style({
-        image: new ol.style.Circle({
-          radius: 6,
-          fill: new ol.style.Fill({
-            color: '#3399CC'
-          }),
-          stroke: new ol.style.Stroke({
-            color: '#fff',
-            width: 2
-          })
-        })
-      })
-    ]);
-
-    document.getElementById("geolocation")
-            .addEventListener("click", (evt) => {
-              if (!geolocation.getTracking()) {
-                geolocation.setTracking(true);
-                evt.target.classList.add("active");
-              } else {
-                map.getView().setCenter(geolocation.getPosition());
-              }
-            });
-
-    geolocation.once("change:position", () => {
-      map.getView().setCenter(geolocation.getPosition());
-      map.getView().setZoom(Math.max(12, map.getView().getZoom()));
-      positionFeature.setGeometry(geolocation.getPosition() ?
-        new ol.geom.Point(geolocation.getPosition()) : null);
-      new ol.layer.Vector({
-        map: map,
-        source: new ol.source.Vector({
-          features: [positionFeature]
-        })
+      const geolocation = new ol.Geolocation({
+        projection: state.getMap().getView().getProjection()
       });
-    });
 
-    geolocation.on('change:position', () => {
-      positionFeature.setGeometry(geolocation.getPosition() ?
-        new ol.geom.Point(geolocation.getPosition()) : null);
-    });
+      const positionFeature = new ol.Feature();
+      positionFeature.setStyle([
+        new ol.style.Style({
+          image: new ol.style.Circle({
+            radius: 12,
+            fill: new ol.style.Fill({
+              color: 'rgba(51, 181, 204, 0.4)'
+            })
+          })
+        }),
+        new ol.style.Style({
+          image: new ol.style.Circle({
+            radius: 6,
+            fill: new ol.style.Fill({
+              color: '#3399CC'
+            }),
+            stroke: new ol.style.Stroke({
+              color: '#fff',
+              width: 2
+            })
+          })
+        })
+      ]);
 
-  }
+      const menus = document.querySelector(".menu-container ul.menus");
+      const li = document.createElement("li");
+      li.innerHTML = "現在地を表示";
+      li.addEventListener("click", (evt) => {
+        if (!geolocation.getTracking()) {
+          geolocation.setTracking(true);
+          evt.target.classList.add("active");
+        } else {
+          state.getMap().getView().setCenter(geolocation.getPosition());
+        }
+      });
+
+      menus.appendChild(li);
+
+      geolocation.once("change:position", () => {
+        state.getMap().getView().setCenter(geolocation.getPosition());
+        state.getMap().getView().setZoom(Math.max(12, state.getMap().getView().getZoom()));
+        positionFeature.setGeometry(geolocation.getPosition() ?
+          new ol.geom.Point(geolocation.getPosition()) : null);
+        new ol.layer.Vector({
+          map: state.getMap(),
+          source: new ol.source.Vector({
+            features: [positionFeature]
+          })
+        });
+      });
+
+      geolocation.on('change:position', () => {
+        positionFeature.setGeometry(geolocation.getPosition() ?
+          new ol.geom.Point(geolocation.getPosition()) : null);
+      });
+
+    }
+  })(mapState);
 
   map.on("singleclick", (evt) => {
     const feature = map.forEachFeatureAtPixel(evt.pixel, (feature) => {
@@ -752,44 +766,44 @@
   });
 
   // スライダーのイベントの設定
+  ;
+  ((state) => {
 
-  slider.addEventListener("change", (evt) => {
-    const neu = parseInt(evt.target.value, 10);
+    slider.addEventListener("change", (evt) => {
+      const neu = parseInt(evt.target.value, 10);
 
-    mapState.setYear(neu)
-        .updateYear(rails, mvtStyle)
-        .updatePermalink();
-  });
-
-  //スライダーボタンの設定
-
-;
-(() => {
-  const sliderButtons = document.querySelectorAll(".slider-button");
-  for (let i = 0; i < sliderButtons.length; i++) {
-    sliderButtons[i].addEventListener("click", (evt) => {
-      const neu = mapState.getCurrentYear() + parseInt(evt.target.dataset.year, 10);
-      if (neu <= mapState.getYearsExtent().min) {
-        mapState.setYear(mapState.getYearsExtent().min);
-      } else if (neu >= mapState.getYearsExtent().max) {
-        mapState.setYear(mapState.getYearsExtent().max);
-      } else {
-        mapState.setYear(neu);
-      }
-      mapState.updateYear(rails, mvtStyle)
+      mapState.setYear(neu)
+          .updateYear(rails, mvtStyle)
           .updatePermalink();
     });
-  }
-})();
+
+    //スライダーボタンの設定
+
+    const sliderButtons = document.querySelectorAll(".slider-button");
+    for (let i = 0; i < sliderButtons.length; i++) {
+      sliderButtons[i].addEventListener("click", (evt) => {
+        const neu = state.getCurrentYear() + parseInt(evt.target.dataset.year, 10);
+        if (neu <= state.getYearsExtent().min) {
+          state.setYear(state.getYearsExtent().min);
+        } else if (neu >= state.getYearsExtent().max) {
+          state.setYear(state.getYearsExtent().max);
+        } else {
+          state.setYear(neu);
+        }
+        state.updateYear(rails, mvtStyle)
+            .updatePermalink();
+      });
+    }
+  })(mapState);
 
   // レイヤメニューの設定
 
   ;
-  ((map) => {
+  ((state) => {
 
     const layerContainer = document.querySelector(".layer-container");
 
-    map.getLayers().forEach((lyg, i) => {
+    state.getMap().getLayers().forEach((lyg, i) => {
       if (lyg.get("type") === "basemaps" || lyg.get("type") === "overlays") {
 
         const groupContainer = document.createElement("div");
@@ -806,7 +820,7 @@
         lyg.getLayers().forEach((lyr, j) => {
           if (lyr.get("type") === "layer") {
 
-            lyr.setVisible(mapState.getLayers()[lyg.get("permalink")].indexOf(lyr.get("permalink")) >= 0);
+            lyr.setVisible(state.getLayers()[lyg.get("permalink")].indexOf(lyr.get("permalink")) >= 0);
 
             const botan = document.createElement("li");
             botan.classList.add("layer-menu");
@@ -848,7 +862,7 @@
 
               }
 
-            mapState.setLayersConfigFromMap(lyg)
+            state.setLayersConfigFromMap(lyg)
                 .updatePermalink();
             });
 
@@ -862,7 +876,7 @@
 
     });
 
-  })(map);
+  })(mapState);
 
   // メニューの設定
 
@@ -940,7 +954,7 @@
       mapState.setMustUpdateInfo(true);
     }
     // remove invisible features
-    if (!mapState.getVisibleInYear(feature)) return new ol.style.Style();
+    if (!mapState.getVisibleInYear(feature)) return /*new ol.style.Style()*/null;
     if (mapState.getEqualtoCurrentCue(feature) && mapState.getMustUpdateInfo()) {
       console.log("info updated!");
 
@@ -998,10 +1012,11 @@
   }
 
   function stationStyleFunction(feature, resolution) {
-    const sty = [new ol.style.Style()];
     const status = mapState.getSelectedStatus();
 
-    if (resolution > 20 && (!status || (status && feature.get("N05_006").slice(5, 10) !== mapState.getSelectedValue().slice(5)))) return sty[0];
+    if (resolution > 20 && (!status || (status && feature.get("N05_006").slice(5, 10) !== mapState.getSelectedValue().slice(5)))) return null;
+
+    const sty = [new ol.style.Style()];
 
     sty[0].setZIndex(0);
     sty[0].setImage(new ol.style.Circle({
@@ -1030,7 +1045,7 @@
         }),
         stroke: new ol.style.Stroke({
           color: "black",
-          width: 4
+          width: 5
         })
       })
     }));
