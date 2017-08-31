@@ -1,0 +1,20 @@
+{
+  "name": "railroad-timeline-map",
+  "version": "1.0.0",
+  "description": "![map example](data/tokyo.gif)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cieloazul310/railroad-timeline-map.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cieloazul310/railroad-timeline-map/issues"
+  },
+  "homepage": "https://github.com/cieloazul310/railroad-timeline-map#readme"
+}
