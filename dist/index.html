@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="author" content="cieloazul310">
+  <meta name="keywords" content="OpenLayers,地図,鉄道,廃線">
+  <meta name="description" content="日本鉄道時系列地図は1950年から現在までに存在した日本全国の鉄道路線を表示した地図です。">
+  <meta property="og:description" content="日本鉄道時系列地図は1950年から現在までに存在した日本全国の鉄道路線を表示した地図">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="日本鉄道時系列地図 | 水戸地図">
+  <meta property="og:url" content="https://cieloazul310.github.io/railroad-timeline-map/">
+  <meta property="og:site_name" content="水戸地図">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="日本鉄道時系列地図 | 水戸地図">
+  <meta name="twitter:description" content="日本鉄道時系列地図は1950年から現在までに存在した日本全国の鉄道路線を表示した地図">
+  <meta property="og:image" content="https://cieloazul310.github.io/railroad-timeline-map/data/thumb.png">
+  <!--
+  <link rel="stylesheet" href="//openlayers.org/en/v4.3.1/css/ol.css">
+  <link rel="stylesheet" href="./map.css">
+-->
+  <title>日本鉄道時系列地図 | 水戸地図</title>
+  <script>
+    (function(i, s, o, g, r, a, m) {
+      i['GoogleAnalyticsObject'] = r;
+      i[r] = i[r] || function() {
+        (i[r].q = i[r].q || []).push(arguments)
+      }, i[r].l = 1 * new Date();
+      a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0];
+      a.async = 1;
+      a.src = g;
+      m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-74683419-3', 'auto');
+    ga('send', 'pageview');
+  </script>
+</head>
+
+<body>
+  <div class="map-container">
+
+    <div class="map" id="map"></div>
+
+    <div class="info" id="info">
+      <div id="info-title">
+        <ul>
+          <li>路線を選択してください</li>
+        </ul>
+      </div>
+      <small id="info-detail">事業者区分</small>
+    </div>
+
+    <div class="slider-container" id="slider-container">
+      <div class="slider-wrapper">
+        <div class="slider-guide">
+          <button class="slider-button slider-back" data-year="-5" title="5年前">&lt;&lt;</button>
+          <button class="slider-button slider-back" data-year="-1" title="1年前">&lt;</button>
+          <span id="year"></span>
+          <button class="slider-button slider-ahead" data-year="1" title="1年後">&gt;</button>
+          <button class="slider-button slider-ahead" data-year="5" title="5年後">&gt;&gt;</button>
+        </div>
+        <input type="range" id="slider" />
+      </div>
+    </div>
+    <nav class="menu" id="menu">
+      <div class="menu-wrapper" id="menu-wrapper">
+        <div class="menu-wrapper-outer menu-closer">
+        </div>
+        <div class="menu-wrapper-inner">
+          <span class="close-button menu-closer" id="menu-close">&times;</span>
+          <h1>日本鉄道時系列地図</h1>
+          <div class="map-controler menu-content">
+            <div class="layer-container">
+            </div>
+            <div class="menu-container">
+              <h3>Function</h3>
+              <ul class="menus">
+              </ul>
+            </div>
+          </div>
+          <div class="menu-content">
+            <button class="menu-closer">&times; メニューを閉じる</button>
+          </div>
+          <div class="description menu-content">
+            <article>
+              <section>
+                <h3>この地図について</h3>
+                <p>日本鉄道時系列地図は、国土交通省が提供する地図データ（国土数値情報・鉄道時系列）を表示した地図です。1950年から2017年までに存在した日本全国の鉄道路線を表示しています。</p>
+              </section>
+              <section>
+                <h3>使い方</h3>
+                <ul>
+                  <li>画面下のスライダーを操作することで、指定した年代のデータを表示することができます。</li>
+                  <li>画面内の路線をクリックすると、路線を選択することができます。</li>
+                  <li>メニュー画面から表示する地図データを選択することができます。</li>
+                  <li>メニュー画面内の「現在地を表示」をクリックすると、地図内に現在地が表示されます。</li>
+                </ul>
+              </section>
+              <section>
+              <h3>地図データについて</h3>
+                <h4><a href="http://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-N05-v1_3.html" target="_blank">国土数値情報 鉄道時系列データ</a></h4>
+                <blockquote cite="http://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-N05-v1_3.html">
+                  昭和25年1月1日から平成28年12月31日までに運行していた全国の旅客鉄道・軌道の路線や駅の開業・廃止情報として、事業者（新幹線、JR在来線、公営鉄道、民営鉄道、第三セクター）、事業者名、路線名、運営会社等などの変遷情報を路線形状（線）、駅位置（点）ごとに時系列的に整備したものである（貨物駅と貨物路線は除く）。
+                </blockquote>
+
+                <h4><a href="https://www.openstreetmap.org/" target="_blank">OpenStreetMap</a></h4>
+                <blockquote cite="https://www.openstreetmap.org/about">
+                  OpenStreetMapは、道路、通路、カフェ、鉄道駅など、世界中にあるすべてのものに関するデータを提供・メンテナンスしているマッパーのコミュニティによって構築されました。
+                </blockquote>
+
+                <h4><a href="https://maps.gsi.go.jp/development/ichiran.html#pale" target="_blank">地理院地図（淡色地図）</a></h4>
+                <p>淡色の地理院地図</p>
+                <blockquote cite="https://maps.gsi.go.jp/development/ichiran.html#pale" class="map-attribution">
+                  Shoreline data is derived from: United States. National Imagery and Mapping Agency. "Vector Map Level 0 (VMAP0)." Bethesda, MD: Denver, CO: The Agency; USGS Information Services, 1997.
+                </blockquote>
+
+                <h4><a href="https://cyberjapandata.gsi.go.jp/legend/seamlessphoto.pdf" target="_blank">写真（シームレス空中写真）</a></h4>
+                <blockquote cite="https://cyberjapandata.gsi.go.jp/legend/seamlessphoto.pdf">
+                  シームレス空中写真は様々な種類の写真を組み合わせ、「2007 年～」：電子国土基本図（オルソ画像）の空白域を埋めたものです。
+                </blockquote>
+                <blockquote class="map-attribution">「データソース：Landsat8画像（GSI,TSIC,GEO Grid/AIST）, Landsat8画像（courtesy of the U.S. Geological Survey）, 海底地形（GEBCO）」<br>
+                Images on 世界衛星モザイク画像 obtained from site https://lpdaac.usgs.gov/data_access maintained by the NASA Land Processes Distributed Active Archive Center (LP DAAC), USGS/Earth Resources Observation and Science (EROS) Center, Sioux Falls, South Dakota, (Year). Source of image data product.</blockquote>
+
+                <h4><a href="https://cyberjapandata.gsi.go.jp/legend/attension_relief.html" target="_blank">色別標高図</a></h4>
+                <blockquote cite="https://cyberjapandata.gsi.go.jp/legend/attension_relief.html">
+                  色別標高図は、標高の変化を陰影（太陽光線が地表に入射する際に，地表の凹凸の程度や方向によって明るく見えたり暗く見えたりする現象）と段彩（標高の段階的な色分け表現）の効果を用いて視覚的に表現したものです。
+                </blockquote>
+                <blockquote class="map-attribution">
+                  「海域部は海上保安庁海洋情報部の資料を使用して作成」
+                </blockquote>
+
+                <h4><a href="http://www.gsi.go.jp/bousaichiri/slopemap.html" target="_blank">傾斜量図</a></h4>
+                <blockquote cite="http://www.gsi.go.jp/bousaichiri/slopemap.html">
+                  地表面の傾きの量を算出し、その大きさを白黒の濃淡で表現したものです。白いほど傾斜が緩やか、黒いほど急峻であることを意味します。台地、段丘、山地、火山地形、地すべり、断層などの地形判読などにご活用いただけます。
+                </blockquote>
+
+                <h4><a href="https://maps.gsi.go.jp/development/ichiran.html#blank" target="_blank">白地図</a></h4>
+                <p>行政区界と地名のみが書かれている地図</p>
+
+              </section>
+              <section>
+                <h3>データの誤りやバグについて</h3>
+                <p>鉄道時系列データの誤りについては国土数値情報を提供する<a href="http://nlftp.mlit.go.jp/ksj/other/faq.html#Q2" target="_blank">国土交通省の国土情報提供サイト運営事務局</a>までお知らせください。</p>
+                <p>地図の動作のバグについては<a href="//github.com/cieloazul310/railroad-timeline-map/">Github</a>でお知らせいただけると幸いです。</p>
+              </section>
+            </article>
+          </div>
+          <div class="menu-content description">
+            <aside>
+              <h3>Configuration</h3>
+              <ul>
+                <li>日本鉄道時系列地図 v0.1 <small>2017/08/25</small></li>
+                <li>Powered by OpenLayers v4.3.1</li>
+                <li>作成者: cieloazul310</li>
+                <li><a href="//github.com/cieloazul310/railroad-timeline-map/">Github Repository</a></li>
+              </ul>
+              <h3>Updates</h3>
+              <ul>
+                <li><small>2017/08/25</small> 仮公開</li>
+              </ul>
+            </aside>
+          </div>
+          <div class="menu-content">
+            <button class="menu-closer">&times; メニューを閉じる</button>
+          </div>
+          <div class="copyrights menu-content">
+            <p>© 2017 cieloazul310. All Rights Reserved</p>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div>
+  <script src="bundle.js"></script>
+</body>
+
+</html>
