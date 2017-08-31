@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/cieloazul310/railroad-timeline-map/issues"
   },
-  "homepage": "https://github.com/cieloazul310/railroad-timeline-map#readme"
+  "homepage": "https://github.com/cieloazul310/railroad-timeline-map#readme",
+  "devDependencies": {
+    "webpack": "^3.5.5"
+  }
 }
