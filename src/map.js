@@ -1,6 +1,27 @@
-import * as ol from "openlayers";
-import './ol.css';
+import Map from "ol/map";
+import View from "ol/view";
+import TileLayer from "ol/layer/Tile";
+import XYZSource from "ol/source/xyz";
+import Attribution from "ol/attribution";
+import OSMSource from "ol/source/osm";
+import LayerGroup from "ol/layer/group";
+import VTLayer from "ol/layer/vectortile";
+import VTSource from "ol/source/vectortile";
+import MVTformat from "ol/format/mvt";
+import Style from "ol/style/style";
+import Circle from "ol/style/circle"
+import Fill from "ol/style/fill";
+import Stroke from "ol/style/stroke";
+import Text from "ol/style/text";
+import Proj from "ol/proj";
+import Control from "ol/control";
+import ScaleLine from "ol/control/scaleline";
+import 'ol/ol.css';
 import './map.css';
+
+if (process.env.NODE_ENV !== 'production') {
+  console.log('Looks like we are in development mode!');
+}
 
   // デフォルトのmapStateを定義
 
@@ -65,7 +86,7 @@ import './map.css';
     setViewFromMap() {
       const neu = {
         zoom: this.map.getView().getZoom(),
-        center: ol.proj.toLonLat(this.map.getView().getCenter()),
+        center: Proj.toLonLat(this.map.getView().getCenter()),
         rotation: this.map.getView().getRotation()
       };
       this.setView(neu)
@@ -307,7 +328,7 @@ import './map.css';
     // update map from config
 
     updateView() {
-      this.map.getView().setCenter(ol.proj.fromLonLat(this.config.view.center));
+      this.map.getView().setCenter(Proj.fromLonLat(this.config.view.center));
       this.map.getView().setZoom(this.config.view.zoom);
       this.map.getView().setRotation(this.config.view.rotation);
       console.log("update view!");
@@ -418,18 +439,18 @@ import './map.css';
     ksj: '<a href="http://nlftp.mlit.go.jp/ksj/" target="_blank">国土数値情報</a>',
   };
 
-  const osm = new ol.layer.Tile({
-    source: new ol.source.OSM(),
+  const osm = new TileLayer({
+    source: new OSMSource(),
     title: "OpenStreetMap",
     permalink: "osm",
     type: "layer",
     visible: false
   });
 
-  const ort = new ol.layer.Tile({
-    source: new ol.source.XYZ({
+  const ort = new TileLayer({
+    source: new XYZSource({
       url: "//cyberjapandata.gsi.go.jp/xyz/seamlessphoto/" + "{z}/{x}/{y}.jpg",
-      attributions: new ol.Attribution({
+      attributions: new Attribution({
         html: attributions.gsi
       })
     }),
@@ -440,10 +461,10 @@ import './map.css';
     visible: false
   });
 
-  const relief = new ol.layer.Tile({
-    source: new ol.source.XYZ({
+  const relief = new TileLayer({
+    source: new XYZSource({
       url: "//cyberjapandata.gsi.go.jp/xyz/relief/" + "{z}/{x}/{y}.png",
-      attributions: new ol.Attribution({
+      attributions: new Attribution({
         html: attributions.gsi
       })
     }),
@@ -454,10 +475,10 @@ import './map.css';
     visible: false
   });
 
-  const slope = new ol.layer.Tile({
-    source: new ol.source.XYZ({
+  const slope = new TileLayer({
+    source: new XYZSource({
       url: "//cyberjapandata.gsi.go.jp/xyz/slopemap/" + "{z}/{x}/{y}.png",
-      attributions: new ol.Attribution({
+      attributions: new Attribution({
         html: attributions.gsi
       })
     }),
@@ -468,10 +489,10 @@ import './map.css';
     visible: false
   });
 
-  const cjpale = new ol.layer.Tile({
-    source: new ol.source.XYZ({
+  const cjpale = new TileLayer({
+    source: new XYZSource({
       url: "//cyberjapandata.gsi.go.jp/xyz/pale/" + "{z}/{x}/{y}.png",
-      attributions: new ol.Attribution({
+      attributions: new Attribution({
         html: attributions.gsi
       })
     }),
@@ -482,10 +503,10 @@ import './map.css';
     visible: false
   });
 
-  const cjblank = new ol.layer.Tile({
-    source: new ol.source.XYZ({
+  const cjblank = new TileLayer({
+    source: new XYZSource({
       url: "//cyberjapandata.gsi.go.jp/xyz/blank/" + "{z}/{x}/{y}.png",
-      attributions: new ol.Attribution({
+      attributions: new Attribution({
         html: attributions.gsi
       })
     }),
@@ -496,7 +517,7 @@ import './map.css';
     visible: false
   });
 
-  const allblacks = new ol.layer.Group({
+  const allblacks = new LayerGroup({
     title: "黒",
     permalink: "allblacks",
     opacity: 0,
@@ -504,7 +525,7 @@ import './map.css';
     visible: true
   });
 
-  const basemaps = new ol.layer.Group({
+  const basemaps = new LayerGroup({
     layers: [osm, cjpale, ort, relief, slope, cjblank, allblacks],
     title: "Basemap",
     type: "basemaps",
@@ -513,11 +534,11 @@ import './map.css';
 
   // mvtレイヤの設定
 
-  const rails = new ol.layer.VectorTile({
-    source: new ol.source.VectorTile({
-      format: new ol.format.MVT(),
+  const rails = new VTLayer({
+    source: new VTSource({
+      format: new MVTformat(),
       url: "//cieloazul310.github.io/mvt-tiles/tile/rails/" + "{z}/{x}/{y}.mvt",
-      attributions: new ol.Attribution({
+      attributions: new Attribution({
         html: attributions.ksj
       })
     }),
@@ -528,7 +549,7 @@ import './map.css';
     visible: true
   });
 
-  const overlays = new ol.layer.Group({
+  const overlays = new LayerGroup({
     layers: [rails],
     title: "Overlays",
     type: "overlays",
@@ -560,7 +581,7 @@ import './map.css';
     type: "layer",
     visible: false,
     maxResolution: 1000,
-    style: new ol.style.Style({
+    style: new Style({
       image: new ol.style.RegularShape({
         fill: new ol.style.Fill({color: "white"}),
         stroke: new ol.style.Stroke({color: "blue", width: 4}),
@@ -579,14 +600,14 @@ import './map.css';
 */
   // mapオブジェクト
 
-  const map = new ol.Map({
+  const map = new Map({
     target: "map",
-    controls: ol.control.defaults({
-      attribution: false
-    }).extend([new ol.control.Attribution({
-      collapsible: false
-    }), new ol.control.ScaleLine()]),
-    view: new ol.View({
+    controls: Control.defaults({
+      attributionOptions: {
+        collapsible: false
+      }
+    }).extend([new ScaleLine()]),
+    view: new View({
       maxZoom: 16,
       minZoom: 4
     }),
@@ -621,73 +642,12 @@ import './map.css';
   mapState.updateMap(rails, mvtStyle);
 
   // geolocationの設定
-
-  ;
-  ((state) => {
-    if (state.getGeolocation()) {
-
-      const geolocation = new ol.Geolocation({
-        projection: state.getMap().getView().getProjection()
-      });
-
-      const positionFeature = new ol.Feature();
-      positionFeature.setStyle([
-        new ol.style.Style({
-          image: new ol.style.Circle({
-            radius: 12,
-            fill: new ol.style.Fill({
-              color: 'rgba(51, 181, 204, 0.4)'
-            })
-          })
-        }),
-        new ol.style.Style({
-          image: new ol.style.Circle({
-            radius: 6,
-            fill: new ol.style.Fill({
-              color: '#3399CC'
-            }),
-            stroke: new ol.style.Stroke({
-              color: '#fff',
-              width: 2
-            })
-          })
-        })
-      ]);
-
-      const menus = document.querySelector(".menu-container ul.menus");
-      const li = document.createElement("li");
-      li.innerHTML = "現在地を表示";
-      li.addEventListener("click", (evt) => {
-        if (!geolocation.getTracking()) {
-          geolocation.setTracking(true);
-          evt.target.classList.add("active");
-        } else {
-          state.getMap().getView().setCenter(geolocation.getPosition());
-        }
-      });
-
-      menus.appendChild(li);
-
-      geolocation.once("change:position", () => {
-        state.getMap().getView().setCenter(geolocation.getPosition());
-        state.getMap().getView().setZoom(Math.max(12, state.getMap().getView().getZoom()));
-        positionFeature.setGeometry(geolocation.getPosition() ?
-          new ol.geom.Point(geolocation.getPosition()) : null);
-        new ol.layer.Vector({
-          map: state.getMap(),
-          source: new ol.source.Vector({
-            features: [positionFeature]
-          })
-        });
-      });
-
-      geolocation.on('change:position', () => {
-        positionFeature.setGeometry(geolocation.getPosition() ?
-          new ol.geom.Point(geolocation.getPosition()) : null);
-      });
-
-    }
-  })(mapState);
+  if (mapState.getGeolocation()) {
+    import("./geolocation").then(module => {
+      var geolocation = module.default;
+      geolocation(mapState);
+    });
+  }
 
   map.on("singleclick", (evt) => {
     const feature = map.forEachFeatureAtPixel(evt.pixel, (feature) => {
@@ -969,16 +929,16 @@ import './map.css';
 
   function sectionStyleFunction(feature, resolution) {
     const sty = [
-      new ol.style.Style({
+      new Style({
         zIndex: 1,
-        stroke: new ol.style.Stroke({
+        stroke: new Stroke({
           width: Math.min(12, createStyle(feature).width * baiBain(resolution)) + 2,
           color: "rgba(0, 0, 0, 0.8)"
         })
       }),
-      new ol.style.Style({
+      new Style({
         zIndex: createStyle(feature).zIndex,
-        stroke: new ol.style.Stroke({
+        stroke: new Stroke({
           width: Math.min(12, createStyle(feature).width * baiBain(resolution)),
           color: createStyle(feature).color
         })
@@ -992,9 +952,9 @@ import './map.css';
       sty[1].getStroke().setWidth(resolution < 19.11 ? Math.min(12, createStyle(feature).width * baiBain(resolution)) : 4);
 
       return [
-        new ol.style.Style({
+        new Style({
           zIndex: 15,
-          stroke: new ol.style.Stroke({
+          stroke: new Stroke({
             width: resolution < 19.11 ? Math.min(12, createStyle(feature).width * baiBain(resolution)) + 8 : 13,
             color: "white"
           })
@@ -1016,14 +976,14 @@ import './map.css';
 
     if (resolution > 20 && (!status || (status && feature.get("N05_006").slice(5, 10) !== mapState.getSelectedValue().slice(5)))) return null;
 
-    const sty = [new ol.style.Style({
+    const sty = [new Style({
       zIndex: 0,
-      image: new ol.style.Circle({
+      image: new Circle({
         radius: 2.5,
-        fill: new ol.style.Fill({
+        fill: new Fill({
           color: "white"
         }),
-        stroke: new ol.style.Stroke({
+        stroke: new Stroke({
           width: 1,
           color: "black"
         })
@@ -1032,18 +992,18 @@ import './map.css';
 
     if (resolution > 4.78 && (!status || (status && feature.get("N05_006").slice(5, 10) !== mapState.getSelectedValue().slice(5)))) return sty;
 
-    sty.push(new ol.style.Style({
+    sty.push(new Style({
       zIndex: 10,
-      text: new ol.style.Text({
+      text: new Text({
         offsetX: 8,
         font: '12px -apple-system,BlinkMacSystemFont,"Helvetica Neue","Original Yu Gothic","Yu Gothic",YuGothic,Verdana,Meiryo,"M+ 1p",sans-serif',
         textAlign: "left",
         textBaseline: "middle",
         text: feature.get("N05_011"),
-        fill: new ol.style.Fill({
+        fill: new Fill({
           color: "white"
         }),
-        stroke: new ol.style.Stroke({
+        stroke: new Stroke({
           color: "black",
           width: 5
         })
