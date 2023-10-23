@@ -12,3 +12,23 @@ body {
   width: 100%;
   height: 100%;
 }
+
+.slider-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: fixed;
+  bottom: 40;
+  width: 100%;
+  z-index: 10;
+}
+.slider {
+  width: 80%;
+  max-width: 600px;
+}
+.year {
+  font-size: x-large;
+  font-weight: bolder;
+  font-family: monospace;
+  text-shadow: rgba(255, 255, 255, 0.8) 0 0 2px;
+}
