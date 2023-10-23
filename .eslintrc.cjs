@@ -8,7 +8,7 @@ module.exports = {
   },
   parserOptions: {
     sourceType: "module",
-    project: "./tsconfig.json",
+    project: "./tsconfig.eslint.json",
     ecmaVersion: "latest",
   },
   overrides: [
@@ -16,6 +16,13 @@ module.exports = {
       files: [".eslintrc.cjs", "vite.config.ts"],
       rules: {
         "import/no-extraneous-dependencies": "off",
+      },
+    },
+    {
+      files: ["src/styles/*.ts"],
+      rules: {
+        "@typescript-eslint/naming-convention": "off",
+        "@typescript-eslint/no-unused-vars": "warn"
       },
     },
   ],

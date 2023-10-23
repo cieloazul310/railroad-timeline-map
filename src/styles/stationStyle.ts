@@ -10,7 +10,6 @@ export default function stationStyle(year: number) {
     properties: RailsFeatureProperties<"station">,
     resolution: number,
   ) => {
-    /* eslint-disable-next-line @typescript-eslint/naming-convention */
     const { N05_005b, N05_005e, N05_011 } = properties;
     if (year < parseInt(N05_005b, 10) || year > parseInt(N05_005e, 10))
       return null;

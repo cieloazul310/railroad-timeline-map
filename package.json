@@ -14,7 +14,8 @@
   "license": "ISC",
   "dependencies": {
     "@cieloazul310/ol-gsi-vt": "^1.1.2",
-    "ol": "^8.1.0"
+    "ol": "^8.1.0",
+    "pmtiles": "^2.11.0"
   },
   "devDependencies": {
     "@types/node": "^20.8.7",
@@ -29,5 +30,11 @@
     "prettier": "^3.0.3",
     "typescript": "^5.2.2",
     "vite": "^4.5.0"
+  },
+  "lint-staged": {
+    "./src/**/*.{js,ts}": [
+      "eslint --fix",
+      "prettier --parser typescript --write"
+    ]
   }
 }

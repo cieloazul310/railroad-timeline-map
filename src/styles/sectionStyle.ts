@@ -7,7 +7,6 @@ export default function sectionStyle(year: number) {
     properties: RailsFeatureProperties<"section">,
     resolution: number,
   ) => {
-    /* eslint-disable-next-line @typescript-eslint/naming-convention */
     const { N05_005b, N05_005e } = properties;
     if (year < parseInt(N05_005b, 10) || year > parseInt(N05_005e, 10))
       return null;

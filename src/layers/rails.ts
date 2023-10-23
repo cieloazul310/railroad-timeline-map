@@ -9,6 +9,8 @@ const railroadLayer = new VectorTileLayer({
     format: new MVTFormat({
       layers: ["section", "station"],
     }),
+    minZoom: 4,
+    maxZoom: 15,
   }),
   declutter: true,
   style: railsStyle(1960),
