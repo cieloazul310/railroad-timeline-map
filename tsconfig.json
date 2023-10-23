@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "sourceMap": true,
+    "module": "commonjs",
+    "target": "esnext",
+    "isolatedModules": true,
+    "useDefineForClassFields": true,
+    "jsx": "react",
+    "allowJs": true
+  },
+  "include": ["src/**/*", ".eslintrc.js", "vite.config.ts"]
+}
