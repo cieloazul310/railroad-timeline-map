@@ -8,7 +8,7 @@ module.exports = {
   },
   parserOptions: {
     sourceType: "module",
-    project: "./tsconfig.eslint.json",
+    project: "./tsconfig.json",
     ecmaVersion: "latest",
   },
   overrides: [
