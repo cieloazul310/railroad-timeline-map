@@ -8,6 +8,5 @@
     "useDefineForClassFields": true,
     "jsx": "react",
     "allowJs": true
-  },
-  "include": ["src/**/*", ".eslintrc.js", "vite.config.ts"]
+  }
 }

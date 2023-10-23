@@ -18,5 +18,12 @@ module.exports = {
         "import/no-extraneous-dependencies": "off",
       },
     },
+    {
+      files: ["src/styles/*.ts"],
+      rules: {
+        "@typescript-eslint/naming-convention": "off",
+        "@typescript-eslint/no-unused-vars": "warn"
+      },
+    },
   ],
 };
