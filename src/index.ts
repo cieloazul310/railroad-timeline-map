@@ -4,6 +4,7 @@ import { fromLonLat } from "ol/proj";
 import { Attribution, ScaleLine, defaults as defaultControl } from "ol/control";
 import baseLayer from "./layers/base";
 import railroadLayer from "./layers/rails";
+import railsStyle from "./styles/railsStyle";
 
 import { parseHash, setPermalink, setPopstate } from "./utils/handleHash";
 import "./style.css";
@@ -30,3 +31,29 @@ const map = new Map({
 
 setPermalink(map);
 setPopstate(map, window);
+
+const initialYear = "2017";
+const sliderContainer = document.createElement("div");
+sliderContainer.setAttribute("class", "slider-container");
+
+const text = document.createElement("span");
+text.setAttribute("class", "year");
+text.textContent = initialYear;
+sliderContainer.appendChild(text);
+
+const slider = document.createElement("input");
+slider.setAttribute("type", "range");
+slider.setAttribute("class", "slider");
+slider.setAttribute("min", "1950");
+slider.setAttribute("max", "2017");
+slider.setAttribute("value", initialYear);
+sliderContainer.appendChild(slider);
+
+slider.addEventListener("change", (event) => {
+  const { value } = event.currentTarget as HTMLInputElement;
+
+  railroadLayer.setStyle(railsStyle(parseInt(value, 10)));
+  text.textContent = value;
+});
+
+document.body.appendChild(sliderContainer);
