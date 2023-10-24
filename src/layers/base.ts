@@ -1,5 +1,10 @@
-import { gsiOptVtStyle, gsiOptVtLayerExclude } from "@cieloazul310/ol-gsi-vt";
+import {
+  gsiOptVtStyle,
+  gsiOptVtLayerExclude,
+  type GsiOptVTFeatureProperties,
+} from "@cieloazul310/ol-gsi-vt";
 import VectorTileLayer from "ol/layer/VectorTile";
+import Style from "ol/style/Style";
 import PMTilesVectorSource from "../utils/ol-pmtiles";
 
 const vtLayer = new VectorTileLayer({
@@ -11,7 +16,18 @@ const vtLayer = new VectorTileLayer({
       layers: gsiOptVtLayerExclude(["RailCL", "RailTrCL"]),
     },
   }),
-  style: gsiOptVtStyle(),
+  style: gsiOptVtStyle({
+    styles: {
+      Anno: (feature) => {
+        const { vt_code } =
+          feature.getProperties() as GsiOptVTFeatureProperties;
+        if (vt_code === 422) {
+          return new Style();
+        }
+        return undefined;
+      },
+    },
+  }),
 });
 
 export default vtLayer;

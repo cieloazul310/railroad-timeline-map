@@ -8,11 +8,11 @@ const selectedSection = (width: number) => [
       color: "#ff0",
       width,
     }),
-    zIndex: 9998,
+    zIndex: 971,
   }),
   new Style({
     stroke: new Stroke({ color: "#000", width: width * 2 }),
-    zIndex: 9997,
+    zIndex: 970,
   }),
 ];
 
@@ -27,11 +27,11 @@ const shinkansen = (selected: boolean) =>
             lineCap: "butt",
             lineDash: [12, 12],
           }),
-          zIndex: 9996,
+          zIndex: 955,
         }),
         new Style({
           stroke: new Stroke({ color: "#33f", width: 6 }),
-          zIndex: 9995,
+          zIndex: 954,
         }),
       ];
 
@@ -46,11 +46,11 @@ const jrStyle = (selected: boolean) =>
             lineCap: "butt",
             lineDash: [8, 8],
           }),
-          zIndex: 9994,
+          zIndex: 953,
         }),
         new Style({
           stroke: new Stroke({ color: "#555", width: 4 }),
-          zIndex: 9993,
+          zIndex: 952,
         }),
       ];
 
@@ -59,10 +59,12 @@ export default function sectionStyle({ year, selectedFeature }: MapState) {
     properties: RailsFeatureProperties<"section">,
     resolution: number,
   ) => {
-    const { N05_001, N05_005b, N05_005e, N05_006 } = properties;
+    const { N05_001, N05_002, N05_005b, N05_005e, N05_006 } = properties;
     if (year < parseInt(N05_005b, 10) || year > parseInt(N05_005e, 10))
       return null;
-    const selected = N05_006 === selectedFeature?.N05_006;
+    const selected =
+      N05_002 === selectedFeature?.N05_002 ||
+      N05_006 === selectedFeature?.N05_006;
 
     if (N05_001 === "1") return shinkansen(selected);
     if (N05_001 === "2") return jrStyle(selected);
@@ -71,12 +73,12 @@ export default function sectionStyle({ year, selectedFeature }: MapState) {
       ? selectedSection(3)
       : [
           new Style({
-            stroke: new Stroke({ color: "#333", width: 2 }),
-            zIndex: 9991,
+            stroke: new Stroke({ color: "#555", width: 2 }),
+            zIndex: 951,
           }),
           new Style({
             stroke: new Stroke({ color: "#fff", width: 4 }),
-            zIndex: 9990,
+            zIndex: 950,
           }),
         ];
   };

@@ -34,8 +34,7 @@ input[type="range"] {
   appearance: none;
   background: transparent;
   cursor: pointer;
-  width: 80%;
-  max-width: 600px;
+  flex-grow: 1;
 }
 
 /* Removes default focus */
@@ -100,6 +99,28 @@ input[type="range"]:focus::-moz-range-thumb {
     monospace,
     sans-serif;
   backdrop-filter: blur(2px);
+}
+
+.year-handler {
+  display: flex;
+  justify-content: center;
+  width: 90%;
+  max-width: 600px;
+  gap: 8px;
+}
+
+.year-handler-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--slider-bg);
+  border: none;
+  border-radius: 8px;
+  padding: 4px;
+  min-width: 2em;
+  color: white;
+  font-weight: bold;
+  font-size: 1.2em;
 }
 
 .info-container {
