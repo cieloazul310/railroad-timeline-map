@@ -9,6 +9,7 @@ import railroadLayer from "./layers/rails";
 import railsStyle from "./styles/railsStyle";
 import geolocation, { useGeolocation } from "./utils/geolocation";
 import GeolocationControl from "./utils/geolocationControl";
+import SliderControl from "./utils/SliderControl";
 import type { RailsFeatureProperties, MapState } from "./types";
 import "./style.css";
 
@@ -16,8 +17,18 @@ const extent = {
   min: 1950,
   max: 2017,
 };
+const url = new URL(window.location.href);
+const params = url.searchParams;
+const initialYear = params.get("year");
+
+const state: MapState = {
+  year: initialYear
+    ? Math.max(extent.min, Math.min(parseInt(initialYear, 10), extent.max))
+    : extent.max,
+};
 
 const geolocationControl = new GeolocationControl();
+const sliderControl = new SliderControl({ state, extent });
 
 const map = new Map({
   target: "map",
@@ -36,18 +47,9 @@ const map = new Map({
     }),
     new ScaleLine(),
     geolocationControl,
+    sliderControl,
   ]),
 });
-
-const url = new URL(window.location.href);
-const params = url.searchParams;
-const initialYear = params.get("year");
-
-const state: MapState = {
-  year: initialYear
-    ? Math.max(extent.min, Math.min(parseInt(initialYear, 10), extent.max))
-    : extent.max,
-};
 
 map.addInteraction(
   new Link({
@@ -71,46 +73,6 @@ map.getView().on("change:resolution", (event) => {
     baseLayer.setBackground(null);
   }
 });
-
-const sliderContainer = document.createElement("div");
-sliderContainer.setAttribute("class", "slider-container");
-
-const text = document.createElement("span");
-text.setAttribute("class", "year");
-text.innerText = state.year.toString();
-sliderContainer.appendChild(text);
-
-const yearHandler = document.createElement("div");
-yearHandler.setAttribute("class", "year-handler");
-
-const buttons = [
-  { value: -5, label: "<<" },
-  { value: -1, label: "<" },
-  { value: 1, label: ">" },
-  { value: 5, label: ">>" },
-].map(({ value, label }) => {
-  const button = document.createElement("button");
-  button.setAttribute("class", "year-handler-button");
-  button.setAttribute("data-year", value.toString());
-  button.innerText = label;
-  return button;
-});
-
-const slider = document.createElement("input");
-slider.setAttribute("type", "range");
-slider.setAttribute("class", "slider");
-slider.setAttribute("min", extent.min.toString());
-slider.setAttribute("max", extent.max.toString());
-slider.setAttribute("value", state.year.toString());
-
-yearHandler.appendChild(buttons[0]);
-yearHandler.appendChild(buttons[1]);
-yearHandler.appendChild(slider);
-yearHandler.appendChild(buttons[2]);
-yearHandler.appendChild(buttons[3]);
-sliderContainer.appendChild(yearHandler);
-
-document.body.appendChild(sliderContainer);
 
 const infoContainer = document.createElement("article");
 infoContainer.setAttribute("class", "info-container");
@@ -160,7 +122,8 @@ function setSelectedFeature(
 function setYear(year: number) {
   state.year = year;
   railroadLayer.setStyle(railsStyle(state));
-  text.innerText = state.year.toString();
+  sliderControl.setText(state.year.toString());
+  // text.innerText = state.year.toString();
   if (!params.get("year")) {
     params.append("year", state.year.toString());
   } else {
@@ -175,24 +138,7 @@ function setYear(year: number) {
   }
 }
 
-slider.addEventListener("change", (event) => {
-  const { value } = event.currentTarget as HTMLInputElement;
-  setYear(parseInt(value, 10));
-});
-buttons.forEach((element) => {
-  element.addEventListener("click", () => {
-    const value = element.dataset.year;
-    const newValue = Math.min(
-      extent.max,
-      Math.max(state.year + parseInt(value, 10), extent.min),
-    );
-    setYear(newValue);
-
-    if (slider.value !== newValue.toString()) {
-      slider.value = newValue.toString();
-    }
-  });
-});
+sliderControl.setYearFunction(setYear);
 
 map.on("click", (event) => {
   const feature = map.forEachFeatureAtPixel(
