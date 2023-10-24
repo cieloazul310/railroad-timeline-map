@@ -11,8 +11,10 @@ export default function stationStyle({ year, selectedFeature }: MapState) {
     properties: RailsFeatureProperties<"station">,
     resolution: number,
   ) => {
-    const { N05_002, N05_005b, N05_005e, N05_011 } = properties;
-    const selected = selectedFeature?.N05_002 === N05_002;
+    const { N05_002, N05_003, N05_005b, N05_005e, N05_011 } = properties;
+    const selected =
+      N05_002 === selectedFeature?.N05_002 &&
+      N05_003 === selectedFeature?.N05_003;
 
     if (resolution > zoomToResolution(12) && !selected) return null;
     if (year < parseInt(N05_005b, 10) || year > parseInt(N05_005e, 10) + 1)

@@ -8,6 +8,7 @@ const railroadLayer = new VectorTileLayer({
     format: new MVTFormat({
       layers: ["section", "station"],
     }),
+    attributions: "国土数値情報(鉄道時系列)",
     minZoom: 4,
     maxZoom: 15,
   }),
