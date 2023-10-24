@@ -9,7 +9,7 @@ import railroadLayer from "./layers/rails";
 import railsStyle from "./styles/railsStyle";
 import geolocation, { useGeolocation } from "./utils/geolocation";
 import GeolocationControl from "./utils/geolocationControl";
-import SliderControl from "./utils/SliderControl";
+import SliderControl from "./utils/sliderControl";
 import type { RailsFeatureProperties, MapState } from "./types";
 import "./style.css";
 
