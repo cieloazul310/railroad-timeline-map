@@ -1,7 +1,6 @@
 import VectorTileLayer from "ol/layer/VectorTile";
 import VectorTileSource from "ol/source/VectorTile";
 import MVTFormat from "ol/format/MVT";
-import railsStyle from "../styles/railsStyle";
 
 const railroadLayer = new VectorTileLayer({
   source: new VectorTileSource({
@@ -13,7 +12,8 @@ const railroadLayer = new VectorTileLayer({
     maxZoom: 15,
   }),
   declutter: true,
-  style: railsStyle(1960),
+  className: "rails",
+  style: null,
 });
 
 export default railroadLayer;
