@@ -19,10 +19,15 @@ module.exports = {
       },
     },
     {
-      files: ["src/styles/*.ts"],
+      files: ["src/**/*.ts"],
       rules: {
         "@typescript-eslint/naming-convention": "off",
-        "@typescript-eslint/no-unused-vars": "warn"
+      },
+    },
+    {
+      files: ["src/styles/*.ts"],
+      rules: {
+        "@typescript-eslint/no-unused-vars": "warn",
       },
     },
   ],

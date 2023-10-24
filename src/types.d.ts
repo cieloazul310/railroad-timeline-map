@@ -43,3 +43,12 @@ export type RailsFeatureProperties<L extends "station" | "section"> = {
    */
   N05_011: L extends "station" ? string : null;
 };
+
+export type MapState = {
+  year: number;
+  selectedFeature?: {
+    N05_002: string;
+    N05_003: string;
+    N05_006: string;
+  } | null;
+};
