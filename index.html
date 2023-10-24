@@ -1,23 +1,51 @@
 <html lang="ja">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="author" content="cieloazul310">
-    <meta name="keywords" content="OpenLayers,地図,鉄道,廃線">
-    <meta name="description" content="日本鉄道時系列地図は1950年から現在までに存在した日本全国の鉄道路線を表示した地図です。">
-    <meta property="og:description" content="日本鉄道時系列地図は1950年から現在までに存在した日本全国の鉄道路線を表示した地図">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="日本鉄道時系列地図 | 水戸地図">
-    <meta property="og:url" content="https://cieloazul310.github.io/railroad-timeline-map/">
-    <meta property="og:site_name" content="水戸地図">
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="日本鉄道時系列地図 | 水戸地図">
-    <meta name="twitter:description" content="日本鉄道時系列地図は1950年から現在までに存在した日本全国の鉄道路線を表示した地図">
-    <meta property="og:image" content="https://cieloazul310.github.io/railroad-timeline-map/data/thumb.png">
-    <title>日本鉄道時系列地図 | 水戸地図</title>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-VE0MVTCH7K"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-VE0MVTCH7K");
+    </script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="author" content="cieloazul310" />
+    <meta
+      name="description"
+      content="日本鉄道時系列地図は1950年から2017年までに存在した日本全国の鉄道路線を表示した地図です。"
+    />
+    <meta
+      property="og:description"
+      content="日本鉄道時系列地図は1950年から2017年までに存在した日本全国の鉄道路線を表示した地図"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="日本鉄道時系列地図 1950-2017 | 水戸地図" />
+    <meta
+      property="og:url"
+      content="https://cieloazul310.github.io/railroad-timeline-map/"
+    />
+    <meta property="og:site_name" content="水戸地図" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="日本鉄道時系列地図 1950-2017 | 水戸地図" />
+    <meta
+      name="twitter:description"
+      content="日本鉄道時系列地図は1950年から2017年までに存在した日本全国の鉄道路線を表示した地図"
+    />
+    <meta
+      property="og:image"
+      content="https://cieloazul310.github.io/ogimage.png"
+    />
+    <title>日本鉄道時系列地図 1950-2017 | 水戸地図</title>
   </head>
   <body>
     <div class="map" id="map"></div>
