@@ -7,6 +7,8 @@ import { defaultPalette } from "@cieloazul310/ol-gsi-vt";
 import baseLayer from "./layers/base";
 import railroadLayer from "./layers/rails";
 import railsStyle from "./styles/railsStyle";
+import geolocation, { useGeolocation } from "./utils/geolocation";
+import GeolocationControl from "./utils/geolocationControl";
 import type { RailsFeatureProperties, MapState } from "./types";
 import "./style.css";
 
@@ -14,6 +16,8 @@ const extent = {
   min: 1950,
   max: 2017,
 };
+
+const geolocationControl = new GeolocationControl();
 
 const map = new Map({
   target: "map",
@@ -31,6 +35,7 @@ const map = new Map({
       collapsible: false,
     }),
     new ScaleLine(),
+    geolocationControl,
   ]),
 });
 
@@ -54,6 +59,9 @@ map.addInteraction(
 map.once("loadend", () => {
   railroadLayer.setStyle(railsStyle({ year: state.year }));
 });
+
+geolocationControl.setGeolocation(geolocation);
+useGeolocation({ map, geolocation });
 
 map.getView().on("change:resolution", (event) => {
   event.preventDefault();

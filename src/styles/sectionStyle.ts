@@ -60,11 +60,13 @@ export default function sectionStyle({ year, selectedFeature }: MapState) {
     properties: RailsFeatureProperties<"section">,
     resolution: number,
   ) => {
-    const { N05_001, N05_002, N05_005b, N05_005e, N05_006 } = properties;
+    const { N05_001, N05_002, N05_003, N05_005b, N05_005e, N05_006 } =
+      properties;
     if (year < parseInt(N05_005b, 10) || year > parseInt(N05_005e, 10) + 1)
       return null;
     const selected =
-      N05_002 === selectedFeature?.N05_002 ||
+      (N05_002 === selectedFeature?.N05_002 &&
+        N05_003 === selectedFeature?.N05_003) ||
       N05_006 === selectedFeature?.N05_006;
 
     if (!selected && resolution > zoomToResolution(8))
