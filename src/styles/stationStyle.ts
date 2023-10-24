@@ -3,7 +3,7 @@ import Fill from "ol/style/Fill";
 import Stroke from "ol/style/Stroke";
 import Text from "ol/style/Text";
 import Circle from "ol/style/Circle";
-import { zoomToResolution, defaultPalette } from "@cieloazul310/ol-gsi-vt";
+import { zoomToResolution } from "@cieloazul310/ol-gsi-vt";
 import type { RailsFeatureProperties, MapState } from "../types";
 
 export default function stationStyle({ year, selectedFeature }: MapState) {
@@ -15,7 +15,7 @@ export default function stationStyle({ year, selectedFeature }: MapState) {
     const selected = selectedFeature?.N05_002 === N05_002;
 
     if (resolution > zoomToResolution(12) && !selected) return null;
-    if (year < parseInt(N05_005b, 10) || year > parseInt(N05_005e, 10))
+    if (year < parseInt(N05_005b, 10) || year > parseInt(N05_005e, 10) + 1)
       return null;
 
     if (resolution > zoomToResolution(14) && !selected) {
@@ -40,12 +40,9 @@ export default function stationStyle({ year, selectedFeature }: MapState) {
       new Style({
         text: new Text({
           text: N05_011,
-          font: `${fontSize} "Roboto, Helvetica, Arial, sans-serif"`,
+          font: `${fontSize} sans-serif`,
           fill: new Fill({
-            color:
-              !selectedFeature || selected
-                ? defaultPalette.anno.transp
-                : "#777",
+            color: !selectedFeature || selected ? "#090" : "#777",
           }),
           stroke: new Stroke({
             color: "white",

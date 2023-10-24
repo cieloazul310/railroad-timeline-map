@@ -1,5 +1,6 @@
 import {
   gsiOptVtStyle,
+  palePalette,
   gsiOptVtLayerExclude,
   type GsiOptVTFeatureProperties,
 } from "@cieloazul310/ol-gsi-vt";
@@ -17,13 +18,16 @@ const vtLayer = new VectorTileLayer({
     },
   }),
   style: gsiOptVtStyle({
+    theme: {
+      palette: palePalette,
+    },
     styles: {
       Anno: (feature) => {
         const { vt_code } =
           feature.getProperties() as GsiOptVTFeatureProperties;
-        if (vt_code === 422) {
-          return new Style();
-        }
+
+        if (vt_code === 422) return new Style();
+
         return undefined;
       },
     },
