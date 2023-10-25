@@ -3,10 +3,24 @@ import Stroke from "ol/style/Stroke";
 import { zoomToResolution } from "@cieloazul310/ol-gsi-vt";
 import type { RailsFeatureProperties, MapState } from "../types";
 
-const selectedSection = (width: number) => [
+const colors = {
+  shinkansen: "#33f",
+  jr: "#55a",
+  shitetsu: "#c57",
+  municipal: "#cc5",
+  third_sector: "#ca5",
+};
+
+const selectedSection = ({
+  width,
+  color,
+}: {
+  width: number;
+  color: string;
+}) => [
   new Style({
     stroke: new Stroke({
-      color: "#ff0",
+      color,
       width,
     }),
     zIndex: 971,
@@ -19,7 +33,7 @@ const selectedSection = (width: number) => [
 
 const shinkansen = (selected: boolean) =>
   selected
-    ? selectedSection(5)
+    ? selectedSection({ width: 5, color: colors.shinkansen })
     : [
         new Style({
           stroke: new Stroke({
@@ -31,14 +45,14 @@ const shinkansen = (selected: boolean) =>
           zIndex: 955,
         }),
         new Style({
-          stroke: new Stroke({ color: "#33f", width: 6 }),
+          stroke: new Stroke({ color: colors.shinkansen, width: 6 }),
           zIndex: 954,
         }),
       ];
 
 const jrStyle = (selected: boolean) =>
   selected
-    ? selectedSection(3)
+    ? selectedSection({ width: 3, color: colors.jr })
     : [
         new Style({
           stroke: new Stroke({
@@ -50,7 +64,7 @@ const jrStyle = (selected: boolean) =>
           zIndex: 953,
         }),
         new Style({
-          stroke: new Stroke({ color: "#55a", width: 4 }),
+          stroke: new Stroke({ color: colors.jr, width: 4 }),
           zIndex: 952,
         }),
       ];
@@ -69,6 +83,8 @@ export default function sectionStyle({ year, selectedFeature }: MapState) {
         N05_003 === selectedFeature?.N05_003) ||
       N05_006 === selectedFeature?.N05_006;
 
+    const sameCompony = N05_003 === selectedFeature?.N05_003;
+
     if (!selected && resolution > zoomToResolution(8))
       return new Style({
         stroke: new Stroke({
@@ -80,17 +96,24 @@ export default function sectionStyle({ year, selectedFeature }: MapState) {
     if (N05_001 === "1") return shinkansen(selected);
     if (N05_001 === "2") return jrStyle(selected);
 
-    const strokeWidth = N05_001 === "4" ? 3 : 2;
+    const styles = (() => {
+      if (N05_001 === "4") return { color: "#c57", width: 3 };
+      if (N05_001 === "5") return { color: "#ca5", width: 2 };
+      return { color: "#cc5", width: 2 };
+    })();
 
     return selected
-      ? selectedSection(strokeWidth + 1)
+      ? selectedSection({ width: styles.width * 1.5, color: styles.color })
       : [
           new Style({
-            stroke: new Stroke({ color: "#865", width: strokeWidth }),
+            stroke: new Stroke(styles),
             zIndex: 951,
           }),
           new Style({
-            stroke: new Stroke({ color: "#fff", width: strokeWidth * 2 }),
+            stroke: new Stroke({
+              color: sameCompony ? "#666" : "#fff",
+              width: styles.width * 2,
+            }),
             zIndex: 950,
           }),
         ];

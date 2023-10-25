@@ -23,7 +23,7 @@ export default function stationStyle({ year, selectedFeature }: MapState) {
     if (resolution > zoomToResolution(14) && !selected) {
       return new Style({
         image: new Circle({
-          radius: 3,
+          radius: 2,
           fill: new Fill({ color: "white" }),
           stroke: new Stroke({ color: "black", width: 2 }),
         }),
