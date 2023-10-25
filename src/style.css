@@ -29,12 +29,13 @@ body {
 
 .slider-container {
   display: flex;
+  position: fixed;
   flex-direction: column;
   align-items: center;
   bottom: 40;
   left: 50%;
   transform: translateX(-50%);
-  width: 100%;
+  width: 90%;
   max-width: 600px;
   z-index: 10;
   background: none;
@@ -75,11 +76,6 @@ input[type="range"]::-webkit-slider-thumb {
   width: 1rem;
 }
 
-input[type="range"]:focus::-webkit-slider-thumb {
-  outline: 3px solid var(--thumb);
-  outline-offset: 0.125rem;
-}
-
 /*********** Firefox styles ***********/
 /* slider track */
 input[type="range"]::-moz-range-track {
@@ -96,11 +92,6 @@ input[type="range"]::-moz-range-thumb {
   border-radius: 0.5rem;
   height: 2rem;
   width: 1rem;
-}
-
-input[type="range"]:focus::-moz-range-thumb {
-  outline: 3px solid var(--thumb);
-  outline-offset: 0.125rem;
 }
 
 .year {
@@ -121,6 +112,16 @@ input[type="range"]:focus::-moz-range-thumb {
   width: 100%;
   gap: 8px;
   user-select: none;
+}
+
+.year-handler-button {
+  background-color: var(--ol-brand-color);
+  border-radius: 8px;
+  border: none;
+  color: #fff;
+  font-weight: bold;
+  width: 2rem;
+  height: 2rem;
 }
 
 .info-container {

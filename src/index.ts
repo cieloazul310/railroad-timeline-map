@@ -3,13 +3,16 @@ import View from "ol/View";
 import { fromLonLat } from "ol/proj";
 import { Attribution, ScaleLine, defaults as defaultControl } from "ol/control";
 import Link from "ol/interaction/Link";
-import { defaultPalette } from "@cieloazul310/ol-gsi-vt";
 import baseLayer from "./layers/base";
 import railroadLayer from "./layers/rails";
 import railsStyle from "./styles/railsStyle";
-import geolocation, { useGeolocation } from "./utils/geolocation";
-import GeolocationControl from "./utils/geolocationControl";
-import SliderControl from "./utils/sliderControl";
+import {
+  geolocation,
+  useGeolocation,
+  GeolocationControl,
+  createSlider,
+  createInfo,
+} from "./utils";
 import type { RailsFeatureProperties, MapState } from "./types";
 import "./style.css";
 
@@ -28,7 +31,13 @@ const state: MapState = {
 };
 
 const geolocationControl = new GeolocationControl();
-const sliderControl = new SliderControl({ state, extent });
+const { sliderContainer, yearText, buttons, slider } = createSlider({
+  state,
+  extent,
+});
+document.body.appendChild(sliderContainer);
+const { infoContainer, railTitle, railDescription } = createInfo();
+document.body.appendChild(infoContainer);
 
 const map = new Map({
   target: "map",
@@ -47,7 +56,6 @@ const map = new Map({
     }),
     new ScaleLine(),
     geolocationControl,
-    sliderControl,
   ]),
 });
 
@@ -64,27 +72,6 @@ map.once("loadend", () => {
 
 geolocationControl.setGeolocation(geolocation);
 useGeolocation({ map, geolocation });
-
-map.getView().on("change:resolution", (event) => {
-  event.preventDefault();
-  if (map.getView().getZoom() < 9) {
-    baseLayer.setBackground(defaultPalette.waterarea);
-  } else {
-    baseLayer.setBackground(null);
-  }
-});
-
-const infoContainer = document.createElement("article");
-infoContainer.setAttribute("class", "info-container");
-const info = document.createElement("hgroup");
-info.setAttribute("class", "info");
-const railTitle = document.createElement("h1");
-const railDescription = document.createElement("p");
-info.appendChild(railTitle);
-info.appendChild(railDescription);
-
-infoContainer.appendChild(info);
-document.body.appendChild(infoContainer);
 
 function getSectionInExtent(clickedN05_002?: string | null) {
   const features = railroadLayer
@@ -122,8 +109,7 @@ function setSelectedFeature(
 function setYear(year: number) {
   state.year = year;
   railroadLayer.setStyle(railsStyle(state));
-  sliderControl.setText(state.year.toString());
-  // text.innerText = state.year.toString();
+  yearText.innerText = state.year.toString();
   if (!params.get("year")) {
     params.append("year", state.year.toString());
   } else {
@@ -131,6 +117,7 @@ function setYear(year: number) {
   }
   window.history.replaceState(null, "", url);
 
+  /** 運営会社名が変わった場合、選択した路線の情報をアップデート */
   const section = getSectionInExtent(state.selectedFeature?.N05_002);
   if (section) {
     const { N05_002, N05_003, N05_006 } = section;
@@ -138,9 +125,27 @@ function setYear(year: number) {
   }
 }
 
-sliderControl.setYearFunction(setYear);
+buttons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const value = button.dataset.year;
+    const newValue = Math.min(
+      extent.max,
+      Math.max(state.year + parseInt(value, 10), extent.min),
+    );
+    setYear(newValue);
 
-map.on("click", (event) => {
+    if (slider.value !== newValue.toString()) {
+      slider.value = newValue.toString();
+    }
+  });
+});
+
+slider.addEventListener("change", (event) => {
+  const { value } = event.currentTarget as HTMLInputElement;
+  setYear(parseInt(value, 10));
+});
+
+map.on("singleclick", (event) => {
   const feature = map.forEachFeatureAtPixel(
     event.pixel,
     (featureLike) => featureLike,
@@ -165,6 +170,7 @@ map.on("click", (event) => {
       feature.getProperties() as RailsFeatureProperties<"section">;
     setSelectedFeature({ N05_002, N05_003, N05_006 });
   } else {
+    /** クリックした地物が駅の場合、路線を検索し置き換え */
     const section = getSectionInExtent(N05_002);
     if (section) {
       const { N05_003, N05_006 } = section;
