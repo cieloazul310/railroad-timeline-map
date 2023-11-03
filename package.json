@@ -14,8 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "@cieloazul310/ol-gsi-vt": "^1.2.0",
-    "ol": "^8.1.0",
-    "pmtiles": "^2.11.0"
+    "ol": "^8.1.0"
   },
   "devDependencies": {
     "@types/node": "^20.8.7",

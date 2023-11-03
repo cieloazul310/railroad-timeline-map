@@ -3,11 +3,11 @@ import View from "ol/View";
 import { fromLonLat } from "ol/proj";
 import { Attribution, ScaleLine, defaults as defaultControl } from "ol/control";
 import Link from "ol/interaction/Link";
+import Geolocation from "ol/Geolocation";
 import baseLayer from "./layers/base";
 import railroadLayer from "./layers/rails";
 import railsStyle from "./styles/railsStyle";
 import {
-  geolocation,
   useGeolocation,
   GeolocationControl,
   createSlider,
@@ -29,6 +29,12 @@ const state: MapState = {
     ? Math.max(extent.min, Math.min(parseInt(initialYear, 10), extent.max))
     : extent.max,
 };
+
+const geolocation = new Geolocation({
+  trackingOptions: {
+    enableHighAccuracy: true,
+  },
+});
 
 const geolocationControl = new GeolocationControl();
 const { sliderContainer, yearText, buttons, slider } = createSlider({

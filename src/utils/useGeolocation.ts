@@ -9,14 +9,7 @@ import Stroke from "ol/style/Stroke";
 import Point from "ol/geom/Point";
 import Geolocation from "ol/Geolocation";
 
-export default new Geolocation({
-  // enableHighAccuracy must be set to true to have the heading value.
-  trackingOptions: {
-    enableHighAccuracy: true,
-  },
-});
-
-export function useGeolocation({
+export default function useGeolocation({
   map,
   geolocation,
 }: {
