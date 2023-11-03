@@ -12,6 +12,7 @@ import {
   GeolocationControl,
   createSlider,
   createInfo,
+  parseYear,
 } from "./utils";
 import type { RailsFeatureProperties, MapState } from "./types";
 import "./style.css";
@@ -21,8 +22,7 @@ const extent = {
   max: 2017,
 };
 const url = new URL(window.location.href);
-const params = url.searchParams;
-const initialYear = params.get("year");
+const initialYear = parseYear(url);
 
 const state: MapState = {
   year: initialYear
@@ -116,12 +116,9 @@ function setYear(year: number) {
   state.year = year;
   railroadLayer.setStyle(railsStyle(state));
   yearText.innerText = state.year.toString();
-  if (!params.get("year")) {
-    params.append("year", state.year.toString());
-  } else {
-    params.set("year", state.year.toString());
-  }
-  window.history.replaceState(null, "", url);
+
+  const hash = `#year=${state.year}`;
+  window.history.replaceState(null, "", hash);
 
   /** 運営会社名が変わった場合、選択した路線の情報をアップデート */
   const section = getSectionInExtent(state.selectedFeature?.N05_002);
