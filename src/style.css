@@ -95,6 +95,8 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .year {
+  position: absolute;
+  transform: translate(0, -100%);
   font-size: xx-large;
   font-weight: bolder;
   font-family: Helvetica,
@@ -119,9 +121,15 @@ input[type="range"]::-moz-range-thumb {
   border-radius: 8px;
   border: none;
   color: #fff;
+  font-family: Helvetica, monospace, sans-serif;
   font-weight: bold;
   width: 2rem;
   height: 2rem;
+  font-size: large;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 }
 
 .info-container {

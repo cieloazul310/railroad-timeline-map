@@ -22,10 +22,10 @@ function createSlider({
   yearHandler.className = "year-handler";
 
   const buttons = [
-    { value: -5, label: "<<" },
-    { value: -1, label: "<" },
-    { value: 1, label: ">" },
-    { value: 5, label: ">>" },
+    { value: -5, label: "-5" },
+    { value: -1, label: "-" },
+    { value: 1, label: "+" },
+    { value: 5, label: "+5" },
   ].map(({ value, label }) => {
     const button = document.createElement("button");
     button.className = "year-handler-button ol-unselectable";
