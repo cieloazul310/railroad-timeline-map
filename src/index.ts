@@ -19,7 +19,7 @@ import "./style.css";
 
 const extent = {
   min: 1950,
-  max: 2017,
+  max: 2023,
 };
 const url = new URL(window.location.href);
 const initialYear = parseYear(url);

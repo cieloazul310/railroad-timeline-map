@@ -1,3 +1,9 @@
+declare module "ol-pmtiles" {
+  import VectorTileSource from "ol/source/VectorTile";
+
+  export class PMTilesVectorSource extends VectorTileSource {}
+}
+
 export type RailsFeatureProperties<L extends "station" | "section"> = {
   layer: L;
   /**
