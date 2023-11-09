@@ -70,6 +70,8 @@ jobs:
 
       - name: Build project
         run: npm run build
+        env:
+          VITE_TILE_URL: ${{ secrets.VITE_TILE_URL }}
         
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
