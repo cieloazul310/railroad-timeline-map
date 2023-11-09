@@ -28,3 +28,5 @@ jobs:
 
       - name: Build Test
         run: npm run build
+        env:
+          VITE_TILE_URL: ${{ secrets.VITE_TILE_URL }}

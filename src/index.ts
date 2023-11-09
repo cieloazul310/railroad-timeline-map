@@ -4,6 +4,7 @@ import { fromLonLat } from "ol/proj";
 import { Attribution, ScaleLine, defaults as defaultControl } from "ol/control";
 import Link from "ol/interaction/Link";
 import Geolocation from "ol/Geolocation";
+import { zoomToResolution } from "@cieloazul310/ol-gsi-vt";
 import baseLayer from "./layers/base";
 import railroadLayer from "./layers/rails";
 import railsStyle from "./styles/railsStyle";
@@ -19,7 +20,7 @@ import "./style.css";
 
 const extent = {
   min: 1950,
-  max: 2017,
+  max: 2022,
 };
 const url = new URL(window.location.href);
 const initialYear = parseYear(url);
@@ -209,4 +210,14 @@ map.on("pointermove", (event) => {
 
   railTitle.innerText = N05_002;
   railDescription.innerText = N05_003;
+});
+
+map.getView().on("change:resolution", (event) => {
+  event.preventDefault();
+  const resolution = map.getView().getResolution();
+  if (resolution < zoomToResolution(16)) {
+    railroadLayer.setOpacity(0.8);
+  } else {
+    railroadLayer.setOpacity(1);
+  }
 });

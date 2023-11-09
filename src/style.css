@@ -130,6 +130,7 @@ input[type="range"]::-moz-range-thumb {
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  touch-action: manipulation;
 }
 
 .info-container {

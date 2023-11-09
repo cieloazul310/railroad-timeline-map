@@ -2,8 +2,9 @@
   "compilerOptions": {
     "noImplicitAny": true,
     "sourceMap": true,
-    "module": "commonjs",
+    "module": "esnext",
     "target": "esnext",
+    "moduleResolution": "bundler",
     "isolatedModules": true,
     "useDefineForClassFields": true,
     "jsx": "react",

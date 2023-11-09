@@ -1,6 +1,5 @@
 import Style from "ol/style/Style";
 import Stroke from "ol/style/Stroke";
-import { zoomToResolution } from "@cieloazul310/ol-gsi-vt";
 import type { RailsFeatureProperties, MapState } from "../types";
 
 const colors = {
@@ -84,14 +83,6 @@ export default function sectionStyle({ year, selectedFeature }: MapState) {
       N05_006 === selectedFeature?.N05_006;
 
     const sameCompony = N05_003 === selectedFeature?.N05_003;
-
-    if (!selected && resolution > zoomToResolution(8))
-      return new Style({
-        stroke: new Stroke({
-          width: 1,
-          color: "#555",
-        }),
-      });
 
     if (N05_001 === "1") return shinkansen(selected);
     if (N05_001 === "2") return jrStyle(selected);
