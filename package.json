@@ -13,7 +13,7 @@
   },
   "license": "ISC",
   "dependencies": {
-    "@cieloazul310/ol-gsi-vt": "^1.4.0",
+    "@cieloazul310/ol-gsi-vt": "^1.4.1",
     "ol": "^10.0.0",
     "ol-pmtiles": "^0.5.0"
   },
