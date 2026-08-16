@@ -4,7 +4,7 @@ import Geolocation from "ol/Geolocation";
 class GeolocationControl extends Control {
   checked: boolean = false;
 
-  geolocation: Geolocation | null;
+  geolocation: Geolocation | null = null;
 
   constructor(opt_options?: ControlOptions) {
     const options = opt_options || {};
@@ -24,9 +24,9 @@ class GeolocationControl extends Control {
   }
 
   private handleGeolocationError = () => {
-    this.geolocation.once("error", () => {
+    this.geolocation?.once("error", () => {
       this.checked = false;
-      this.geolocation.setTracking(false);
+      this.geolocation?.setTracking(false);
     });
   };
 

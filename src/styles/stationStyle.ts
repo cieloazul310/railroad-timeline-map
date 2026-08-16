@@ -1,10 +1,10 @@
-import Style from "ol/style/Style";
+import { zoomToResolution } from "@cieloazul310/ol-gsi-vt";
+import Circle from "ol/style/Circle";
 import Fill from "ol/style/Fill";
 import Stroke from "ol/style/Stroke";
+import Style from "ol/style/Style";
 import Text from "ol/style/Text";
-import Circle from "ol/style/Circle";
-import { zoomToResolution } from "@cieloazul310/ol-gsi-vt";
-import type { RailsFeatureProperties, MapState } from "../types";
+import type { MapState, RailsFeatureProperties } from "../types";
 
 export default function stationStyle({ year, selectedFeature }: MapState) {
   return (

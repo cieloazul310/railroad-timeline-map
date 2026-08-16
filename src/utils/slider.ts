@@ -1,4 +1,4 @@
-import { MapState } from "../types";
+import type { MapState } from "../types";
 
 function createSlider({
   state,

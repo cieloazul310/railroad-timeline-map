@@ -1,13 +1,13 @@
-import Map from "ol/Map";
 import Feature from "ol/Feature";
-import Style from "ol/style/Style";
+import Geolocation from "ol/Geolocation";
+import Point from "ol/geom/Point";
 import VectorLayer from "ol/layer/Vector";
+import Map from "ol/Map";
 import VectorSource from "ol/source/Vector";
 import Circle from "ol/style/Circle";
 import Fill from "ol/style/Fill";
 import Stroke from "ol/style/Stroke";
-import Point from "ol/geom/Point";
-import Geolocation from "ol/Geolocation";
+import Style from "ol/style/Style";
 
 export default function useGeolocation({
   map,
@@ -20,13 +20,14 @@ export default function useGeolocation({
 
   // handle geolocation error.
   geolocation.once("error", (error) => {
+    // eslint-disable-next-line no-console
     console.error(error);
     window.alert(`現在地を取得できません。`);
   });
 
   const accuracyFeature = new Feature();
   geolocation.on("change:accuracyGeometry", () => {
-    accuracyFeature.setGeometry(geolocation.getAccuracyGeometry());
+    accuracyFeature.setGeometry(geolocation.getAccuracyGeometry() ?? undefined);
   });
 
   const positionFeature = new Feature();
@@ -47,7 +48,9 @@ export default function useGeolocation({
 
   geolocation.on("change:position", () => {
     const coordinates = geolocation.getPosition();
-    positionFeature.setGeometry(coordinates ? new Point(coordinates) : null);
+    positionFeature.setGeometry(
+      coordinates ? new Point(coordinates) : undefined,
+    );
   });
 
   const vector = new VectorLayer({
@@ -65,7 +68,7 @@ export default function useGeolocation({
         if (position) {
           map.getView().animate({
             center: position,
-            zoom: Math.max(15, map.getView().getZoom()),
+            zoom: Math.max(15, map.getView().getZoom() ?? 15),
             duration: 250,
           });
         }
