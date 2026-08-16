@@ -20,11 +20,16 @@ body {
 }
 
 .geolocation {
-  top: 65px;
+  top: 5em;
   left: .5em;
 }
 .ol-touch .geolocation {
   top: 80px;
+}
+
+.ol-control button {
+  width: 2em;
+  height: 2em;
 }
 
 .slider-container {

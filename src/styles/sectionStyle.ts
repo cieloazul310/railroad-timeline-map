@@ -1,6 +1,6 @@
-import Style from "ol/style/Style";
 import Stroke from "ol/style/Stroke";
-import type { RailsFeatureProperties, MapState } from "../types";
+import Style from "ol/style/Style";
+import type { MapState, RailsFeatureProperties } from "../types";
 
 const colors = {
   shinkansen: "#33f",
@@ -71,7 +71,7 @@ const jrStyle = (selected: boolean) =>
 export default function sectionStyle({ year, selectedFeature }: MapState) {
   return (
     properties: RailsFeatureProperties<"section">,
-    resolution: number,
+    // resolution: number,
   ) => {
     const { N05_001, N05_002, N05_003, N05_005b, N05_005e, N05_006 } =
       properties;

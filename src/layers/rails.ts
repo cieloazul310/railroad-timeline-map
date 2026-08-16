@@ -1,5 +1,5 @@
-import VectorTileLayer from "ol/layer/VectorTile";
 import { PMTilesVectorSource } from "ol-pmtiles";
+import VectorTileLayer from "ol/layer/VectorTile";
 
 const railroadLayer = new VectorTileLayer({
   source: new PMTilesVectorSource({

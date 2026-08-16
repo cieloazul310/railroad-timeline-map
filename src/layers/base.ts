@@ -1,6 +1,6 @@
 import {
-  gsiOptVtPaleLayer,
   gsiOptVtLayerExclude,
+  gsiOptVtPaleLayer,
   type GsiOptVTFeatureProperties,
 } from "@cieloazul310/ol-gsi-vt";
 import Style from "ol/style/Style";

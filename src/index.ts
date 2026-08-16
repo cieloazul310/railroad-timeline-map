@@ -1,26 +1,26 @@
+import { zoomToResolution } from "@cieloazul310/ol-gsi-vt";
+import Geolocation from "ol/Geolocation";
 import Map from "ol/Map";
 import View from "ol/View";
-import { fromLonLat } from "ol/proj";
 import { Attribution, ScaleLine, defaults as defaultControl } from "ol/control";
 import Link from "ol/interaction/Link";
-import Geolocation from "ol/Geolocation";
-import { zoomToResolution } from "@cieloazul310/ol-gsi-vt";
+import { fromLonLat } from "ol/proj";
 import baseLayer from "./layers/base";
 import railroadLayer from "./layers/rails";
-import railsStyle from "./styles/railsStyle";
-import {
-  useGeolocation,
-  GeolocationControl,
-  createSlider,
-  createInfo,
-  parseYear,
-} from "./utils";
-import type { RailsFeatureProperties, MapState } from "./types";
 import "./style.css";
+import railsStyle from "./styles/railsStyle";
+import type { MapState, RailsFeatureProperties } from "./types";
+import {
+  GeolocationControl,
+  createInfo,
+  createSlider,
+  parseYear,
+  useGeolocation,
+} from "./utils";
 
 const extent = {
   min: 1950,
-  max: 2022,
+  max: 2025,
 };
 const url = new URL(window.location.href);
 const initialYear = parseYear(url);
@@ -86,8 +86,7 @@ function getSectionInExtent(clickedN05_002?: string | null) {
     .getFeaturesInExtent(map.getView().getViewStateAndExtent().extent)
     .filter((feature) => {
       const { N05_002, N05_005b, N05_005e, layer } = feature.getProperties() as
-        | RailsFeatureProperties<"section">
-        | RailsFeatureProperties<"station">;
+        RailsFeatureProperties<"section"> | RailsFeatureProperties<"station">;
       return (
         layer === "section" &&
         N05_002 === clickedN05_002 &&
@@ -134,7 +133,7 @@ buttons.forEach((button) => {
     const value = button.dataset.year;
     const newValue = Math.min(
       extent.max,
-      Math.max(state.year + parseInt(value, 10), extent.min),
+      Math.max(state.year + parseInt(value ?? "1950", 10), extent.min),
     );
     setYear(newValue);
 
@@ -146,7 +145,7 @@ buttons.forEach((button) => {
 
 slider.addEventListener("change", (event) => {
   const { value } = event.currentTarget as HTMLInputElement;
-  setYear(parseInt(value, 10));
+  setYear(parseInt(value ?? "1950", 10));
 });
 
 map.on("singleclick", (event) => {
@@ -166,8 +165,7 @@ map.on("singleclick", (event) => {
     return;
   }
   const { N05_002, layer } = feature.getProperties() as
-    | RailsFeatureProperties<"section">
-    | RailsFeatureProperties<"station">;
+    RailsFeatureProperties<"section"> | RailsFeatureProperties<"station">;
 
   if (layer === "section") {
     const { N05_003, N05_006 } =
@@ -205,8 +203,7 @@ map.on("pointermove", (event) => {
   }
 
   const { N05_002, N05_003 } = feature.getProperties() as
-    | RailsFeatureProperties<"section">
-    | RailsFeatureProperties<"station">;
+    RailsFeatureProperties<"section"> | RailsFeatureProperties<"station">;
 
   railTitle.innerText = N05_002;
   railDescription.innerText = N05_003;
@@ -214,7 +211,7 @@ map.on("pointermove", (event) => {
 
 map.getView().on("change:resolution", (event) => {
   event.preventDefault();
-  const resolution = map.getView().getResolution();
+  const resolution = map.getView().getResolution() ?? 0;
   if (resolution < zoomToResolution(16)) {
     railroadLayer.setOpacity(0.8);
   } else {
