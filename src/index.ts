@@ -82,7 +82,6 @@ useGeolocation({ map, geolocation });
 
 function getSectionInExtent(clickedN05_002?: string | null) {
   const features = railroadLayer
-    .getSource()
     .getFeaturesInExtent(map.getView().getViewStateAndExtent().extent)
     .filter((feature) => {
       const { N05_002, N05_005b, N05_005e, layer } = feature.getProperties() as
@@ -136,7 +135,6 @@ buttons.forEach((button) => {
       Math.max(state.year + parseInt(value ?? "1950", 10), extent.min),
     );
     setYear(newValue);
-
     if (slider.value !== newValue.toString()) {
       slider.value = newValue.toString();
     }
