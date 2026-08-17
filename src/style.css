@@ -24,7 +24,7 @@ body {
   left: .5em;
 }
 .ol-touch .geolocation {
-  top: 80px;
+  top: 7em;
 }
 
 .ol-control button {
@@ -53,11 +53,13 @@ input[type="range"] {
   background: transparent;
   cursor: pointer;
   flex-grow: 1;
+  border-radius: 0.5rem;
+  box-shadow: 0 0px 4px 0px rgba(0, 0, 0, 0.4);
 }
 
 /* Removes default focus */
 input[type="range"]:focus {
-  outline: none;
+  outline: 2px solid black;
 }
 
 /******** Chrome, Safari, Opera and Edge Chromium styles ********/
@@ -136,6 +138,7 @@ input[type="range"]::-moz-range-thumb {
   align-items: center;
   cursor: pointer;
   touch-action: manipulation;
+  box-shadow: 0 0px 4px 0px rgba(0, 0, 0, 0.4);
 }
 
 .info-container {

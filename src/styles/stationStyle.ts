@@ -25,7 +25,7 @@ export default function stationStyle({ year, selectedFeature }: MapState) {
         image: new Circle({
           radius: 2,
           fill: new Fill({ color: "white" }),
-          stroke: new Stroke({ color: "black", width: 2 }),
+          stroke: new Stroke({ color: "#666", width: 2 }),
         }),
         zIndex: 960,
       });
@@ -60,7 +60,7 @@ export default function stationStyle({ year, selectedFeature }: MapState) {
         image: new Circle({
           radius: 4,
           fill: new Fill({ color: "white" }),
-          stroke: new Stroke({ color: "black", width: 2 }),
+          stroke: new Stroke({ color: "#333", width: 2 }),
         }),
         zIndex: 960,
       }),
